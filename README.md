@@ -1,5 +1,6 @@
 <div align="center">
-# NetSafeGuard
+
+  # NetSafeGuard
   # Disclaimer
 1. Acceptance of Terms
 
