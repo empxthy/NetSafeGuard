@@ -41,7 +41,7 @@ This disclaimer is governed by the laws of **Your Jurisdiction**, and any disput
 By using the Program, you acknowledge that you have read, understood, and agree to be bound by this disclaimer.
 
 [https://github.com/alexemployed]
-[19.12.2023]
+[24.12.2023]
 </div><br>
 
 # Features
