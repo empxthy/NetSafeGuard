@@ -3,7 +3,7 @@
   # Disclaimer
 1. Acceptance of Terms
 
-By using **NetListenPro** (the "Program"), you agree to be bound by the terms and conditions outlined in this disclaimer. If you do not agree to these terms, please refrain from using the Program.
+By using **NetSafeGuard**, you agree to be bound by the terms and conditions outlined in this disclaimer. If you do not agree to these terms, please refrain from using the Program.
 
 2. No Warranty
 
@@ -41,11 +41,11 @@ By using the Program, you acknowledge that you have read, understood, and agree 
 # Installation
 * Clone this repository -
   ```git
-  git clone https://github.com/alexemployed/NetListenPro.git
+  git clone https://github.com/alexemployed/NetSafeGuard.git
   ```
 * Then go to directory -
   ```zsh
-  $ cd NetListenPro
+  $ cd NetSafeGuard
   $ python3 main.py
   ```
 
@@ -55,7 +55,10 @@ By using the Program, you acknowledge that you have read, understood, and agree 
 <b>NetListenerPro</b> requires following programs to run properly - 
 - `asyncio`
 - `os`
-- `sys`
+- `configparser`
+- `subprocess`
+- `collections`
+- `re`
 
 > All the dependencies will be installed automatically when you run **NetListenerPro** for the first time.
 </details>
