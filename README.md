@@ -1,6 +1,6 @@
 <div align="center">
   <img src="https://raw.githubusercontent.com/alexemployed/NetSafeGuard/main/.github/misc/LOGO.png"></img><br>
-  <img src="https://raw.githubusercontent.com/alexemployed/NetListenPro/251fa55d4240c6d106c5275b3d849e12e19456e2/.github/misc/VERSION.svg"></img>
+  <img src="https://raw.githubusercontent.com/alexemployed/NetSafeGuard/08714fafd14468e336a2461a5e96d40a9982574f/.github/misc/VERSION.svg"></img>
   <img src="https://raw.githubusercontent.com/alexemployed/NetSafeGuard/cc2efa5c30d523c68d276d7a2e297b4da6ea77fa/.github/misc/LICENSE.svg"></img><br><br>
   <img src="https://raw.githubusercontent.com/alexemployed/NetSafeGuard/cc2efa5c30d523c68d276d7a2e297b4da6ea77fa/.github/misc/AUTHOR.svg"></img>
   <img src="https://raw.githubusercontent.com/alexemployed/NetSafeGuard/cc2efa5c30d523c68d276d7a2e297b4da6ea77fa/.github/misc/Open%20source.svg"></img>
