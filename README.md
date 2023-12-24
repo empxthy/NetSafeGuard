@@ -62,8 +62,11 @@ By using the Program, you acknowledge that you have read, understood, and agree 
   <summary><h3>Dependencies</h3></summary>
 
 <b>NetListenerPro</b> requires following programs to run properly - 
-- `asyncio`
+- ``
 - `os`
+- `sys`
+- `shutil`
+- `requests`
 - `configparser`
 - `subprocess`
 - `collections`
