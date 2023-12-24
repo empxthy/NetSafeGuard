@@ -10,7 +10,6 @@
 # Language: Python
 
 # Imports
-import asyncio
 import configparser
 import subprocess
 import os
@@ -21,7 +20,7 @@ import shutil
 from collections import namedtuple
 
 # Version
-_version = "1.0.0"
+_version = "1.2.0"
 
 # Colors
 _black = "\033[0;30m"
@@ -70,11 +69,11 @@ def check_update(repo_owner, repo_name, current_version):
         latest_release = response.json()
         latest_version = latest_release["tag_name"]
 
-        if current_version == latest_version:
+        if current_version >= latest_version:
             print(f"{_green}[+]{_white}Your software is up to date (version {current_version}).")
         else:
             print(f"{_red}[-]{_white}A new version ({latest_version}) is available. Please update your software.")
-            upt = input(f"{_yellow}[!]{_white}Update now?: [{_green}y{_white}/{_red}n{_white}]\n{_yellow}[?]{_white}Y/N: ")
+            upt = str(input(f"{_yellow}[!]{_white}Update now?: [{_green}y{_white}/{_red}n{_white}]\n{_yellow}[?]{_white}Y/N: "))
             clone_path = os.path.join(os.path.expanduser('~'), 'Desktop')
             if upt == "y":
                 try:
@@ -191,5 +190,5 @@ if __name__ == "__main__":
         check_admin()
     else:
         sys.exit(1)
-    check_update("alexemployed", "NetSafeGuard", "1.0.0")
+    check_update("alexemployed", "NetSafeGuard", _version)
     print_profiles()
