@@ -15,6 +15,9 @@ import configparser
 import subprocess
 import os
 import re
+import sys
+import requests
+import shutil
 from collections import namedtuple
 
 # Version
@@ -49,11 +52,45 @@ def startup():
     ██╔██╗ ██║█████╗     ██║   ███████╗███████║█████╗  █████╗  ██║  ███╗██║   ██║███████║██████╔╝██║  ██║
     ██║╚██╗██║██╔══╝     ██║   ╚════██║██╔══██║██╔══╝  ██╔══╝  ██║   ██║██║   ██║██╔══██║██╔══██╗██║  ██║
     ██║ ╚████║███████╗   ██║   ███████║██║  ██║██║     ███████╗╚██████╔╝╚██████╔╝██║  ██║██║  ██║██████╔╝
-    ╚═╝  ╚═══╝╚══════╝   ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝     ╚══════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ {_white}
+    ╚═╝  ╚═══╝╚══════╝   ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝     ╚══════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ 
 
     {_cyan}[+]CREATOR: {_white}https://github.com/alexemployed                                            {_cyan}Version:{_white} {_version}
                                                                                                         """)
 
+# Check Update
+def check_update(repo_owner, repo_name, current_version):
+    print(f"{_yellow}[!]{_white}Checking for updates...")
+
+    api_url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/releases/latest"
+
+    try:
+        response = requests.get(api_url)
+        response.raise_for_status()
+
+        latest_release = response.json()
+        latest_version = latest_release["tag_name"]
+
+        if current_version == latest_version:
+            print(f"{_green}[+]{_white}Your software is up to date (version {current_version}).")
+        else:
+            print(f"{_red}[-]{_white}A new version ({latest_version}) is available. Please update your software.")
+            upt = input(f"{_yellow}[!]{_white}Update now?: [{_green}y{_white}/{_red}n{_white}]\n{_yellow}[?]{_white}Y/N: ")
+            clone_path = os.path.join(os.path.expanduser('~'), 'Desktop')
+            if upt == "y":
+                try:
+                    shutil.rmtree(clone_path)
+                    subprocess.run(["git", "clone", "https://github.com/alexemployed/NetSafeGuard.git", clone_path], check=True)
+                    print(f"{_green}[+]{_white}Repository cloned successfully!")
+                except subprocess.CalledProcessError as e:
+                    print(f"Error: {_red}{e}{_white}")
+            
+            if upt == "n":
+                print(f"{_red}[-]{_white}Update cancelled by user!")
+                sys.exit(1)
+    
+    except requests.exceptions.RequestException as e:
+        print(f"{_red}[-]{_white}Error: {e}")
+        print(f"Response content: {response.content}")
 
 # Privalages
     
@@ -70,7 +107,6 @@ def check_admin():
         return True
     except subprocess.CalledProcessError:
         return False
-    
 
 # Windows Wifi
 
@@ -149,4 +185,11 @@ def print_profiles(verbose=1):
     
 if __name__ == "__main__":
     startup()
+    if os.name == 'posix':
+        check_root()
+    elif os.name == 'nt':
+        check_admin()
+    else:
+        sys.exit(1)
+    check_update("alexemployed", "NetSafeGuard", "1.0.0")
     print_profiles()
