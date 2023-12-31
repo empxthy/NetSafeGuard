@@ -16,8 +16,13 @@ import os
 import re
 import sys
 import requests
+import time
+import pkg_resources
 import shutil
 from collections import namedtuple
+from rich.progress import Progress
+from rich.console import Console
+
 
 # Version
 _version = "1.2.0"
@@ -43,7 +48,6 @@ _lightWhite = "\033[1;37m"
 
 
 # Logo
-
 def startup():
     print(f""" {_red}
     ███╗   ██╗███████╗████████╗███████╗ █████╗ ███████╗███████╗ ██████╗ ██╗   ██╗ █████╗ ██████╗ ██████╗ 
@@ -56,9 +60,45 @@ def startup():
     {_cyan}[+]CREATOR: {_white}https://github.com/alexemployed                                            {_cyan}Version:{_white} {_version}
                                                                                                         """)
 
+
+# Typing
+def slow_print_formatted(format_string, *args, delay=0.05):
+    formatted_message = format_string.format(*args)
+    
+    for char in formatted_message:
+        print(char, end='', flush=True)
+        time.sleep(delay)
+    print()
+
+
+
+# Dependencies
+def check_packages():
+    slow_print_formatted(f"{_yellow}[!]{_white} Checking for installed packages...")
+    dependencies = [
+        'configparser==6.0.0',
+        'rich'
+    ]
+
+    for dependency in dependencies:    
+        try:
+            pkg_resources.get_distribution(dependency)
+            slow_print_formatted(f"{_green}[+]{_white} Required packages is installed.")
+            return True
+        except pkg_resources.DistributionNotFound:
+            slow_print_formatted(f"{_red}[-]{_white} Required packages is not installed.")
+            a = str(input(f"{_yellow}[!]{_white} Install now?: [{_green}y{_white}/{_red}n{_white}]\n{_yellow}[?]{_white} Y/N: "))
+            if a == 'y':
+                subprocess.call(["pip", "install", dependency])
+                slow_print_formatted(f"{_green}[+]{_white} Required packages installed successfully!")
+            else:
+                slow_print_formatted(f"{_red}[-]{_white} Installing cancelled by user!")
+
+            
+
 # Check Update
 def check_update(repo_owner, repo_name, current_version):
-    print(f"{_yellow}[!]{_white}Checking for updates...")
+    slow_print_formatted(f"{_yellow}[!]{_white} Checking for updates...")
 
     api_url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/releases/latest"
 
@@ -70,29 +110,28 @@ def check_update(repo_owner, repo_name, current_version):
         latest_version = latest_release["tag_name"]
 
         if current_version >= latest_version:
-            print(f"{_green}[+]{_white}Your software is up to date (version {current_version}).")
+            slow_print_formatted(f"{_green}[+]{_white} Your software is up to date (version {current_version}).")
         else:
-            print(f"{_red}[-]{_white}A new version ({latest_version}) is available. Please update your software.")
-            upt = str(input(f"{_yellow}[!]{_white}Update now?: [{_green}y{_white}/{_red}n{_white}]\n{_yellow}[?]{_white}Y/N: "))
+            slow_print_formatted(f"{_red}[-]{_white} A new version ({latest_version}) is available. Please update your software.")
+            upt = str(input(f"{_yellow}[!]{_white} Update now?: [{_green}y{_white}/{_red}n{_white}]\n{_yellow}[?]{_white}Y/N: "))
             clone_path = os.path.join(os.path.expanduser('~'), 'Desktop')
             if upt == "y":
                 try:
                     shutil.rmtree(clone_path)
                     subprocess.run(["git", "clone", "https://github.com/alexemployed/NetSafeGuard.git", clone_path], check=True)
-                    print(f"{_green}[+]{_white}Repository cloned successfully!")
+                    print(f"{_green}[+]{_white} Repository cloned successfully!")
                 except subprocess.CalledProcessError as e:
                     print(f"Error: {_red}{e}{_white}")
             
             if upt == "n":
-                print(f"{_red}[-]{_white}Update cancelled by user!")
+                print(f"{_red}[-]{_white} Update cancelled by user!")
                 sys.exit(1)
     
     except requests.exceptions.RequestException as e:
-        print(f"{_red}[-]{_white}Error: {e}")
-        print(f"Response content: {response.content}")
+        slow_print_formatted(f"{_red}[-]{_white} Error: {e}")
+        slow_print_formatted(f"Response content: {response.content}")
 
 # Privalages
-    
 def check_root():
     ret = 0
     if os.geteuid != 0:
@@ -108,7 +147,6 @@ def check_admin():
         return False
 
 # Windows Wifi
-
 def get_windows_saved_ssids():
     output = subprocess.check_output("netsh wlan show profiles").decode()
     ssids = []
@@ -145,7 +183,6 @@ def print_windows_profiles(verbose):
     get_windows_saved_wifi_passwords(verbose)
 
 # Linux Wifi
-
 def get_linux_saved_wifi_passwords(verbose=1):   
     network_connections_path = "/etc/NetworkManager/system-connections/"
     fields = ["ssid", "auth-alg", "key-mgmt", "psk"]
@@ -190,5 +227,6 @@ if __name__ == "__main__":
         check_admin()
     else:
         sys.exit(1)
+    check_packages()
     check_update("alexemployed", "NetSafeGuard", _version)
     print_profiles()
