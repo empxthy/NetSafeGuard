@@ -20,8 +20,6 @@ import time
 import pkg_resources
 import shutil
 from collections import namedtuple
-from rich.progress import Progress
-from rich.console import Console
 
 
 # Version
@@ -76,8 +74,7 @@ def slow_print_formatted(format_string, *args, delay=0.05):
 def check_packages():
     slow_print_formatted(f"{_yellow}[!]{_white} Checking for installed packages...")
     dependencies = [
-        'configparser==6.0.0',
-        'rich'
+        'configparser==6.0.0'
     ]
 
     for dependency in dependencies:    
