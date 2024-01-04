@@ -217,13 +217,22 @@ def print_profiles(verbose=1):
     
     
 if __name__ == "__main__":
-    startup()
-    if os.name == 'posix':
-        check_root()
-    elif os.name == 'nt':
-        check_admin()
-    else:
+    try:
+        if os.name == 'posix':
+            startup()
+            check_root()
+            check_packages()
+            check_update(_version)
+            print_profiles()
+        elif os.name == 'nt':
+            startup()
+            check_admin()
+            check_packages()
+            check_update(_version)
+            print_profiles()
+        else:
+            sys.exit(1)
+
+    except KeyboardInterrupt:
+        slow_print_formatted(f"{_red}[-]{_white}\n Program end by user!")
         sys.exit(1)
-    check_packages()
-    check_update("alexemployed", "NetSafeGuard", _version)
-    print_profiles()
