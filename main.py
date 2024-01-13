@@ -21,7 +21,6 @@ import pkg_resources
 import shutil
 from collections import namedtuple
 
-
 # Version
 _version = "1.2.0"
 
@@ -44,7 +43,6 @@ _lightPurple = "\033[1;35m"
 _lightCyan = "\033[1;36m"
 _lightWhite = "\033[1;37m"
 
-
 # Logo
 def startup():
     print(f""" {_red}
@@ -58,9 +56,8 @@ def startup():
     {_cyan}[+]CREATOR: {_white}https://github.com/alexemployed                                            {_cyan}Version:{_white} {_version}
                                                                                                         """)
 
-
 # Typing
-def slow_print_formatted(format_string, *args, delay=0.05):
+def sprint(format_string, *args, delay=0.05):
     formatted_message = format_string.format(*args)
     
     for char in formatted_message:
@@ -68,11 +65,9 @@ def slow_print_formatted(format_string, *args, delay=0.05):
         time.sleep(delay)
     print()
 
-
-
 # Dependencies
 def check_packages():
-    slow_print_formatted(f"{_yellow}[!]{_white} Checking for installed packages...")
+    sprint(f"{_yellow}[!]{_white} Checking for installed packages...")
     dependencies = [
         'configparser==6.0.0'
     ]
@@ -80,24 +75,22 @@ def check_packages():
     for dependency in dependencies:    
         try:
             pkg_resources.get_distribution(dependency)
-            slow_print_formatted(f"{_green}[+]{_white} Required packages is installed.")
+            sprint(f"{_green}[+]{_white} Required packages is installed.")
             return True
         except pkg_resources.DistributionNotFound:
-            slow_print_formatted(f"{_red}[-]{_white} Required packages is not installed.")
+            sprint(f"{_red}[-]{_white} Required packages is not installed.")
             a = str(input(f"{_yellow}[!]{_white} Install now?: [{_green}y{_white}/{_red}n{_white}]\n{_yellow}[?]{_white} Y/N: "))
             if a == 'y':
                 subprocess.call(["pip", "install", dependency])
-                slow_print_formatted(f"{_green}[+]{_white} Required packages installed successfully!")
+                sprint(f"{_green}[+]{_white} Required packages installed successfully!")
             else:
-                slow_print_formatted(f"{_red}[-]{_white} Installing cancelled by user!")
-
-            
+                sprint(f"{_red}[-]{_white} Installing cancelled by user!")
 
 # Check Update
-def check_update(repo_owner, repo_name, current_version):
-    slow_print_formatted(f"{_yellow}[!]{_white} Checking for updates...")
+def check_update(current_version):
+    sprint(f"{_yellow}[!]{_white} Checking for updates...")
 
-    api_url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/releases/latest"
+    api_url = f"https://api.github.com/repos/alexemployed/NetSafeGuard/releases/latest"
 
     try:
         response = requests.get(api_url)
@@ -107,9 +100,9 @@ def check_update(repo_owner, repo_name, current_version):
         latest_version = latest_release["tag_name"]
 
         if current_version >= latest_version:
-            slow_print_formatted(f"{_green}[+]{_white} Your software is up to date (version {current_version}).")
+            sprint(f"{_green}[+]{_white} Your software is up to date (version {current_version}).")
         else:
-            slow_print_formatted(f"{_red}[-]{_white} A new version ({latest_version}) is available. Please update your software.")
+            sprint(f"{_red}[-]{_white} A new version ({latest_version}) is available. Please update your software.")
             upt = str(input(f"{_yellow}[!]{_white} Update now?: [{_green}y{_white}/{_red}n{_white}]\n{_yellow}[?]{_white}Y/N: "))
             clone_path = os.path.join(os.path.expanduser('~'), 'Desktop')
             if upt == "y":
@@ -125,8 +118,8 @@ def check_update(repo_owner, repo_name, current_version):
                 sys.exit(1)
     
     except requests.exceptions.RequestException as e:
-        slow_print_formatted(f"{_red}[-]{_white} Error: {e}")
-        slow_print_formatted(f"Response content: {response.content}")
+        sprint(f"{_red}[-]{_white} Error: {e}")
+        sprint(f"Response content: {response.content}")
 
 # Privalages
 def check_root():
@@ -206,7 +199,6 @@ def print_linux_profiles(verbose):
     print("SSID                     AUTH KEY-MGMT  PSK")
     get_linux_saved_wifi_passwords(verbose)
     
-    
 def print_profiles(verbose=1):
     if os.name == "nt":
         print_windows_profiles(verbose)
@@ -214,7 +206,6 @@ def print_profiles(verbose=1):
         print_linux_profiles(verbose)
     else:
         raise NotImplemented("Program runs only on Windows and POSIX systems!")
-    
     
 if __name__ == "__main__":
     try:
@@ -234,5 +225,5 @@ if __name__ == "__main__":
             sys.exit(1)
 
     except KeyboardInterrupt:
-        slow_print_formatted(f"{_red}[-]{_white}\n Program end by user!")
+        sprint(f"{_red}[-]{_white}\n Program end by user!")
         sys.exit(1)
